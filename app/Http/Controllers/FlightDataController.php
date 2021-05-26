@@ -3,65 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Connectors\Amadeus\AmadeusConnector;
+use App\Connectors\Amadeus\OfferSearch;
 use App\Http\Requests\RoundtripRequest;
+use App\Http\Resources\AirportResource;
 use App\Http\Resources\FlightOfferResource;
 use Carbon\Carbon;
 
 class FlightDataController extends Controller
 {
-    public function search(RoundtripRequest $request)
+    public function offerSearch(RoundtripRequest $request)
     {
-        $data = $request->all();
-
-        $body = [
-            'currencyCode'       => 'EUR',
-            'travelers'          => [
-                [
-                    'id'           => $data['number_of_adults'],
-                    'travelerType' => 'ADULT',
-                ],
-
-            ],
-            'sources'            => [
-                'GDS',
-            ],
-            'originDestinations' => [
-                [
-                    'id'                      => '1',
-                    'originLocationCode'      => $data['origin'],
-                    'destinationLocationCode' => $data['destination'],
-                    'departureDateTimeRange'  => [
-                        'date' => Carbon::parse($data['departure'])->format('Y-m-d'),
-                    ],
-                ],
-                [
-                    'id'                      => '2',
-                    'originLocationCode'      => $data['destination'],
-                    'destinationLocationCode' => $data['origin'],
-                    'departureDateTimeRange'  => [
-                        'date' => Carbon::parse($data['arrival'])->format('Y-m-d'),
-                    ],
-                ],
-            ],
-            'searchCriteria'     => [
-                'maxFlightOffers' => '20',
-                'flightFilters'   => [
-                    'cabinRestrictions' => [
-                        [
-                            'cabin'                => $data['cabin'],
-                            'coverage'             => 'MOST_SEGMENTS',
-                            'originDestinationIds' => [
-                                '1',
-                            ],
-                        ],
-
-                    ],
-                    'connectionRestriction' => [
-                        'maxNumberOfConnections' => (bool)$data['layovers'] ? '2' : '0',
-                    ],
-                ],
-            ],
-        ];
+        $body = OfferSearch::generateBody($request->all());
 
         $amadeus = new AmadeusConnector();
         $response = $amadeus->post('v2/shopping/flight-offers', $body);
@@ -73,60 +25,14 @@ class FlightDataController extends Controller
         }
     }
 
-    public function test()
+    public function airportSearch(String $query)
     {
-        $body = [
-            'currencyCode'       => 'EUR',
-            'travelers'          => [
-                [
-                    'id'           => '1',
-                    'travelerType' => 'ADULT',
-                ],
-
-            ],
-            'sources'            => [
-                'GDS',
-            ],
-            'originDestinations' => [
-                [
-                    'id'                      => '1',
-                    'originLocationCode'      => 'AMS',
-                    'destinationLocationCode' => 'SYD',
-                    'departureDateTimeRange'  => [
-                        'date' => '2021-05-01', // Carbon::now()->addWeeks(5)->format('Y-m-d'),
-                    ],
-                ],
-                [
-                    'id'                      => '2',
-                    'originLocationCode'      => 'SYD',
-                    'destinationLocationCode' => 'AMS',
-                    'departureDateTimeRange'  => [
-                        'date' => '2021-06-01', // Carbon::now()->addWeeks(6)->format('Y-m-d'),
-                    ],
-                ],
-            ],
-            'searchCriteria'     => [
-                'maxFlightOffers' => '10',
-                'flightFilters'   => [
-                    'cabinRestrictions' => [
-                        [
-                            'cabin'                => 'BUSINESS',
-                            'originDestinationIds' => [
-                                '1',
-                            ],
-                        ],
-
-                    ],
-                ],
-                'connectionRestriction' => [
-                    'maxNumberOfConnections' => '9', // (bool)$data['layovers'] ? '9' : '0',
-                ],
-            ],
-        ];
-
         $amadeus = new AmadeusConnector();
-        $response = $amadeus->post('v2/shopping/flight-offers', $body);
 
-        return FlightOfferResource::collection(collect($response->data));
+        $response = $amadeus->get('v1/reference-data/locations?subType=AIRPORT&keyword=' . $query);
+
+        return AirportResource::collection($response->data);
+
+        dd($response);
     }
 }

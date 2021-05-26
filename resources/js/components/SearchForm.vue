@@ -34,6 +34,13 @@
                             <i class="material-icons text-gray-400">flight_takeoff</i>
                             <input v-model="searchData.origin" class="bg-gray-300 p-2 w-full" name="origin" placeholder="Origin"
                                    type="text">
+                            <vue-suggestion :items="airports"
+                                            v-model="airport",
+                                            :setLabel="setLabel",
+                                            :itemTemplate="airportTemplate",
+                                            @onInputChange="inputChange",
+                                            @onItemSelected="itemSelected">
+                            </vue-suggestion>
                         </span>
                         <span class="flex bg-gray-300 items-center mt-2 px-3">
                             <input v-model="searchData.departure" class="bg-gray-300 p-2 w-full" name="departure" placeholder="Departure"
@@ -75,7 +82,17 @@
 </template>
 
 <script>
+
+import AirportTemplate from "./AirportTemplate";
+// import Vue from "vue";
+//
+// Vue.use(AirportTemplate);
+// import {AirportTemplate} from './AirportTemplate.vue';
+
 export default {
+    // components: {
+    //     AirportTemplate
+    // },
     data() {
         return {
             searchData: {
@@ -84,7 +101,10 @@ export default {
                 layovers: 1
             },
             offers: [],
-            loading: false
+            loading: false,
+            airports: [],
+            airport: {},
+            airportTemplate: AirportTemplate
         }
     },
     methods: {
@@ -96,11 +116,34 @@ export default {
                     if (response.status === 404) {
                         this.offers = [];
                     } else {
-                        this.offers = response.data.data
+                        this.offers = response.data.data;
                     }
                 })
                 .catch(error => console.log(error))
-                .finally(() => this.loading = false)
+                .finally(() => this.loading = false);
+        },
+        itemSelected (airport) {
+            this.airport = airport;
+        },
+        setLabel (airport) {
+            return airport.name;
+        },
+        inputChange (text) {
+            this.loading = true;
+            this.axios
+                .get('api/airports/search/' + text)
+                .then(response => {
+                    if (response.length < 1) {
+                        this.airports = [];
+                    } else {
+                        this.airports = response.data.data;
+                    }
+                })
+                .catch(error => console.log(error))
+                .finally(() => this.loading = false);
+            // your search method
+            // this.airports = airports.filter(item => item.name.contains(text));
+            // now `items` will be showed in the suggestion list
         }
     }
 }

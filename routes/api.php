@@ -25,7 +25,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $connector->authenticate();
 //});
 
-Route::group(['prefix' => 'flights'], function() {
+Route::group(['prefix' => 'airports'], function () {
+    Route::get('search/{query}', [FlightDataController::class, 'airportSearch'])->name('cities.search');
+});
+
+Route::group(['prefix' => 'flights'], function () {
     Route::get('test', [FlightDataController::class, 'test'])->name('flights.test');
-    Route::post('search', [FlightDataController::class, 'search'])->name('flights.search');
+    Route::post('search', [FlightDataController::class, 'offerSearch'])->name('flights.search');
 });

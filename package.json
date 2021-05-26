@@ -26,6 +26,7 @@
         "vue": "^2.6.12",
         "vue-axios": "^3.2.4",
         "vue-loader": "^15.9.6",
-        "vue-router": "^3.5.1"
+        "vue-router": "^3.5.1",
+        "vue-suggestion": "^1.1.0"
     }
 }

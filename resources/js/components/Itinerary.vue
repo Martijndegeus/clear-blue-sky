@@ -1,12 +1,7 @@
 <template>
     <div>
-
-
-
-
-
         <p class="text-sm font-hairline text-gray-600 mt-2 text-center">
-            <span v-for="(segment, index) in itinerary.segments" :key="index" v-if="(index === 1 && segment.carrier !== itinerary.segments[index - 1].carrier) || (index === 2 && segment.carrier !== itinerary.segments[index - 1].carrier) || (index === 3 && segment.carrier !== itinerary.segments[index - 1].carrier) || itinerary.segments.length === 1">
+            <span v-for="(segment, index) in itinerary.segments" :key="index" v-if="((index === 1 && segment.carrier !== itinerary.segments[index - 1].carrier) || (index === 2 && segment.carrier !== itinerary.segments[index - 1].carrier) || (index === 3 && segment.carrier !== itinerary.segments[index - 1].carrier)) || itinerary.segments.length === 1">
                     {{ segment.carrier[Object.keys(segment.carrier)[0]]
                 }}<br>
             </span>
