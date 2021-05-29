@@ -8,6 +8,12 @@ use Carbon\Carbon;
 
 class OfferSearch implements MessageBody
 {
+    /**
+     * Generate Offer Search message body
+     *
+     * @param array $data
+     * @return array
+     */
     public static function generateBody(array $data): array
     {
         return [

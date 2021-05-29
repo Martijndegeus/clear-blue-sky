@@ -27,7 +27,12 @@ class AmadeusConnector implements ApiConnector, PostMethod, GetMethod
         $this->clientSecret = config('apis.amadeus.client_secret');
     }
 
-    public function authenticate(): AmadeusConnector
+    /**
+     * Check authentication, renew token if needed
+     *
+     * @return ApiConnector
+     */
+    public function authenticate(): ApiConnector
     {
         if (is_null($this->tokenEol) || now() <= $this->tokenEol) {
             $data = [
@@ -53,6 +58,12 @@ class AmadeusConnector implements ApiConnector, PostMethod, GetMethod
         return $this;
     }
 
+    /**
+     * Make HTTP GET request
+     *
+     * @param string $endpoint
+     * @return mixed
+     */
     function get(string $endpoint)
     {
         $this->authenticate();
@@ -66,6 +77,13 @@ class AmadeusConnector implements ApiConnector, PostMethod, GetMethod
         return $response;
     }
 
+    /**
+     * Make HTTP POST request
+     *
+     * @param string $endpoint
+     * @param array $body
+     * @return mixed
+     */
     function post(string $endpoint, array $body)
     {
         $this->authenticate();

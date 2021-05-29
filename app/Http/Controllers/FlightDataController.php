@@ -7,9 +7,17 @@ use App\Connectors\Amadeus\OfferSearch;
 use App\Http\Requests\RoundtripRequest;
 use App\Http\Resources\AirportResource;
 use App\Http\Resources\FlightOfferResource;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class FlightDataController extends Controller
 {
+    /**
+     * Search offers
+     *
+     * @param RoundtripRequest $request
+     * @return JsonResponse|AnonymousResourceCollection
+     */
     public function offerSearch(RoundtripRequest $request)
     {
         $body = OfferSearch::generateBody($request->all());
@@ -24,7 +32,13 @@ class FlightDataController extends Controller
         }
     }
 
-    public function airportSearch(String $query)
+    /**
+     * Search airports by city
+     *
+     * @param String $query
+     * @return AnonymousResourceCollection
+     */
+    public function airportSearch(String $query): AnonymousResourceCollection
     {
         $amadeus = new AmadeusConnector();
 
