@@ -7,7 +7,6 @@ use App\Connectors\Amadeus\OfferSearch;
 use App\Http\Requests\RoundtripRequest;
 use App\Http\Resources\AirportResource;
 use App\Http\Resources\FlightOfferResource;
-use Carbon\Carbon;
 
 class FlightDataController extends Controller
 {
@@ -32,7 +31,5 @@ class FlightDataController extends Controller
         $response = $amadeus->get('v1/reference-data/locations?subType=AIRPORT&keyword=' . $query);
 
         return AirportResource::collection($response->data);
-
-        dd($response);
     }
 }

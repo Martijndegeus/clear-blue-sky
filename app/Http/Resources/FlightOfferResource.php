@@ -25,8 +25,8 @@ class FlightOfferResource extends JsonResource
             $segments = [];
 
             foreach ($itinerary->segments as $segment) {
-                $duration = new DateInterval($itinerary->duration);
-                $durationString = $duration->format("%D:%H:%I");
+                $segmentDuration = new DateInterval($segment->duration);
+                $segmentDurationString = $segmentDuration->format("%Hh%Im");
 
                 $segments[] = [
                     'departure' => [
@@ -36,9 +36,9 @@ class FlightOfferResource extends JsonResource
 
                     'arrival'  => [
                         'airport' => Reference::getLocation($segment->arrival->iataCode),
-                        'time'    => Carbon::parse($segment->departure->at)->format('H:i d-m'),
+                        'time'    => Carbon::parse($segment->arrival->at)->format('H:i d-m'),
                     ],
-                    'duration' => $durationString,
+                    'duration' => $segmentDurationString,
                     'carrier'  =>
                         [
                             $segment->carrierCode => ucwords(strtolower(Reference::getCarrier($segment->carrierCode))),

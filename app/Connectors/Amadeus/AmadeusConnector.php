@@ -2,13 +2,13 @@
 
 namespace App\Connectors\Amadeus;
 
-use App\Connectors\ApiConnector;
-use App\Connectors\Methods\GetMethod;
 use App\Connectors\Methods\PostMethod;
-use App\Models\Reference;
-use Exception;
+use App\Connectors\Methods\GetMethod;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Connectors\ApiConnector;
+use App\Models\Reference;
+use Exception;
 
 class AmadeusConnector implements ApiConnector, PostMethod, GetMethod
 {

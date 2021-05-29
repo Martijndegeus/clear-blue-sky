@@ -30,17 +30,11 @@
                                 <option value="6">6 Adults</option>
                             </select>
                         </span>
-                        <span class="flex bg-gray-300 items-center mt-2 px-3">
+                        <span class="flex bg-gray-300 items-center mt-2 px-3 relative">
                             <i class="material-icons text-gray-400">flight_takeoff</i>
                             <input v-model="searchData.origin" class="bg-gray-300 p-2 w-full" name="origin" placeholder="Origin"
                                    type="text">
-                            <vue-suggestion :items="airports"
-                                            v-model="airport",
-                                            :setLabel="setLabel",
-                                            :itemTemplate="airportTemplate",
-                                            @onInputChange="inputChange",
-                                            @onItemSelected="itemSelected">
-                            </vue-suggestion>
+<!--                            <i class="material-icons float-right loading-spinner right-0.5 absolute" v-if="this.loading">cached</i>-->
                         </span>
                         <span class="flex bg-gray-300 items-center mt-2 px-3">
                             <input v-model="searchData.departure" class="bg-gray-300 p-2 w-full" name="departure" placeholder="Departure"
@@ -76,23 +70,18 @@
             </div>
         </div>
         <div class="flex flex-wrap items-start z-10">
-            <offer :offer="offer" v-for="(offer, index) in offers" :key="index"></offer>
+            <offer @offer-modal-hide="showOffer" :offer="offer" v-for="(offer, index) in offers" :key="index"></offer>
         </div>
+        <offer-modal :showing="offerModalShowing" @close="offerModalShowing = false" :offer="this.offer"></offer-modal>
     </div>
 </template>
 
 <script>
-
-import AirportTemplate from "./AirportTemplate";
-// import Vue from "vue";
-//
-// Vue.use(AirportTemplate);
-// import {AirportTemplate} from './AirportTemplate.vue';
-
+import OfferModal from "./OfferModal";
 export default {
-    // components: {
-    //     AirportTemplate
-    // },
+    components: {
+        OfferModal
+    },
     data() {
         return {
             searchData: {
@@ -101,10 +90,9 @@ export default {
                 layovers: 1
             },
             offers: [],
-            loading: false,
-            airports: [],
-            airport: {},
-            airportTemplate: AirportTemplate
+            offer: {},
+            offerModalShowing: false,
+            loading: false
         }
     },
     methods: {
@@ -122,28 +110,10 @@ export default {
                 .catch(error => console.log(error))
                 .finally(() => this.loading = false);
         },
-        itemSelected (airport) {
-            this.airport = airport;
-        },
-        setLabel (airport) {
-            return airport.name;
-        },
-        inputChange (text) {
-            this.loading = true;
-            this.axios
-                .get('api/airports/search/' + text)
-                .then(response => {
-                    if (response.length < 1) {
-                        this.airports = [];
-                    } else {
-                        this.airports = response.data.data;
-                    }
-                })
-                .catch(error => console.log(error))
-                .finally(() => this.loading = false);
-            // your search method
-            // this.airports = airports.filter(item => item.name.contains(text));
-            // now `items` will be showed in the suggestion list
+        showOffer(offer) {
+            console.log(offer);
+            this.offer = offer;
+            this.offerModalShowing = true
         }
     }
 }

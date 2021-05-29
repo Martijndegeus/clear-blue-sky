@@ -11,7 +11,10 @@
         <div class="flex justify-between text-center">
             <div>
                 <p class="text-gray-500">
-                    <i class="material-icons">flight_takeoff</i>
+                    <span class="has-tooltip">
+                        <span class="tooltip rounded shadow-lg p-1 bg-gray-100 text-blue-700 -mt-8">{{ itinerary.segments[0].aircraft }}</span>
+                        <i class="material-icons">flight_takeoff</i>
+                    </span>
                 </p>
                 <p class="text-xs mt-2 text-gray-600 font-hairline">{{ itinerary.segments[0].departure.airport }}</p>
                 <p class="text-xs mt-2 text-gray-600 font-hairline">{{
@@ -30,7 +33,11 @@
             </div>
             <div>
                 <p class="text-gray-500">
-                    <i class="material-icons">flight_land</i>
+                    <span class="has-tooltip">
+                        <span class="tooltip rounded shadow-lg p-1 bg-gray-100 text-blue-700 -mt-8">{{ itinerary.segments[itinerary.segments.length - 1].aircraft }}</span>
+                        <i class="material-icons">flight_land</i>
+
+                    </span>
                 </p>
                 <p class="text-xs mt-2 text-gray-600 font-hairline">{{ itinerary.segments[itinerary.segments.length - 1].arrival.airport }}</p>
                 <p class="text-xs mt-2 text-gray-600 font-hairline">{{
@@ -47,7 +54,7 @@ export default {
     props: ["itinerary"],
     itinerary: {},
     created() {
-        console.log(this.itinerary);
+
     }
 }
 </script>

@@ -19,17 +19,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//Route::get('/', function () {
-//    $connector = new App\Connectors\Amadeus\AmadeusConnector();
-//
-//    return $connector->authenticate();
-//});
-
 Route::group(['prefix' => 'airports'], function () {
     Route::get('search/{query}', [FlightDataController::class, 'airportSearch'])->name('cities.search');
 });
 
 Route::group(['prefix' => 'flights'], function () {
-    Route::get('test', [FlightDataController::class, 'test'])->name('flights.test');
     Route::post('search', [FlightDataController::class, 'offerSearch'])->name('flights.search');
 });

@@ -5,9 +5,9 @@
         </div>
         <itinerary v-for="(itinerary, index) in offer.itineraries" :key="index" :itinerary="itinerary"></itinerary>
         <div class="mt-6">
-            <button
+            <button @click="openOffer"
                 class="rounded shadow-md w-full items-center shadow bg-blue-500 px-4 py-2 text-white hover:bg-blue-400">
-                Show offer
+                Show offer <span v-if="offer.available_seats < 10" class="sm:text-sm">({{ offer.available_seats }} left)</span>
             </button>
         </div>
     </div>
@@ -21,6 +21,11 @@ export default {
     props: ["offer"],
     offer: {},
     created() {
+    },
+    methods: {
+        openOffer() {
+            this.$emit('offer-modal-hide', this.offer);
+        }
     }
 }
 </script>

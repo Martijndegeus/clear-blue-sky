@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <strong>{{ airport.iataCode }}</strong>
-        <span>{{ airport.name }}</span>
+    <div v-if="typeof item !== 'undefined' && item !== null">
+        <strong>{{ item.iataCode }}</strong>
+        <span>{{ item.name }}</span>
     </div>
 </template>
 
@@ -9,14 +9,15 @@
 export default {
     name: "AirportTemplate",
     props: {
-        airport: {required: true}
+        item: { required: true }
     },
-    data() {
-        return {
-            airport: {}
-        };
-    },
+    // data() {
+    //     return {
+    //         // airport: {}
+    //     };
+    // },
     created() {
+        console.log('airport:');
         console.log(this.airport);
     }
 }

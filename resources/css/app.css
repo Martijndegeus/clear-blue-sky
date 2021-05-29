@@ -37,3 +37,13 @@ body {
         transform:rotate(0deg);
     }
 }
+
+.tooltip {
+    @apply invisible absolute;
+}
+
+.has-tooltip:hover .tooltip {
+    @apply visible z-50;
+    font-size: 0.8em;
+    max-width: 100px;
+}
